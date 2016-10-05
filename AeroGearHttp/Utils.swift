@@ -26,8 +26,8 @@ extension String {
         let encodedURL = CFURLCreateStringByAddingPercentEscapes(nil,
             self as NSString,
             nil,
-            "!@#$%&*'();:=+,/?[]",
+            "!@#$%&*'();:=+,/?[]" as CFString!,
             CFStringBuiltInEncodings.UTF8.rawValue)
-        return encodedURL as String
+        return encodedURL as! String
     }
 }

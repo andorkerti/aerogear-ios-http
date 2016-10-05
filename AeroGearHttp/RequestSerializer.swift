@@ -23,15 +23,15 @@ The protocol that request serializers must adhere to.
 public protocol RequestSerializer {
     
     /// The url that this request serializer is bound to.
-    var url: NSURL? { get set }
+    var url: URL? { get set }
     /// Any headers that will be appended on the request.
     var headers: [String: String]? { get set }
     /// The String encoding to be used.
     var stringEncoding: NSNumber { get }
     ///  The cache policy.
-    var cachePolicy: NSURLRequestCachePolicy { get }
+    var cachePolicy: NSURLRequest.CachePolicy { get }
     /// The timeout interval.
-    var timeoutInterval: NSTimeInterval { get set }
+    var timeoutInterval: TimeInterval { get set }
     
     /**
     Build an request using the specified params passed in.
@@ -43,7 +43,7 @@ public protocol RequestSerializer {
     
     :returns: the URLRequest object.
     */
-    func request(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]?) -> NSURLRequest
+    func request(_ url: URL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]?) -> URLRequest
     
     /**
     Build an multipart request using the specified params passed in.
@@ -55,5 +55,5 @@ public protocol RequestSerializer {
     
     :returns: the URLRequest object
    */
-    func multipartRequest(url: NSURL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]?) -> NSURLRequest
+    func multipartRequest(_ url: URL, method: HttpMethod, parameters: [String: AnyObject]?, headers: [String: String]?) -> URLRequest
 }

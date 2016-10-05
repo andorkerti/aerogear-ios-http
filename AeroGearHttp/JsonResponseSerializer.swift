@@ -20,15 +20,15 @@ import Foundation
 /**
 A response deserializer to JSON objects.
 */
-public class JsonResponseSerializer : ResponseSerializer {
+open class JsonResponseSerializer : ResponseSerializer {
     /**
     Deserialize the response received.
     
     :returns: the serialized response
     */
-    public func response(data: NSData) -> (AnyObject?) {
+    open func response(_ data: Data) -> (Any?) {
         do {
-            return try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+            return try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
         } catch _ {
             return nil
         }
@@ -39,23 +39,23 @@ public class JsonResponseSerializer : ResponseSerializer {
     
     :returns:  either true or false if the response is valid for this particular serializer.
     */
-    public func validateResponse(response: NSURLResponse!, data: NSData) throws {
+    open func validateResponse(_ response: URLResponse!, data: Data) throws {
         var error: NSError! = NSError(domain: "Migrator", code: 0, userInfo: nil)
-        let httpResponse = response as! NSHTTPURLResponse
+        let httpResponse = response as! HTTPURLResponse
         
         if !(httpResponse.statusCode >= 200 && httpResponse.statusCode < 300) {
-            let userInfo = [NSLocalizedDescriptionKey: NSHTTPURLResponse.localizedStringForStatusCode(httpResponse.statusCode),
-                NetworkingOperationFailingURLResponseErrorKey: response]
+            let userInfo = [NSLocalizedDescriptionKey: HTTPURLResponse.localizedString(forStatusCode: httpResponse.statusCode),
+                NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
             error = NSError(domain: HttpResponseSerializationErrorDomain, code: httpResponse.statusCode, userInfo: userInfo)
             throw error
         }
         
         // validate JSON
         do {
-            try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
+            try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
         } catch  _  {
             let userInfo = [NSLocalizedDescriptionKey: "Invalid response received, can't parse JSON" as NSString,
-                NetworkingOperationFailingURLResponseErrorKey: response]
+                NetworkingOperationFailingURLResponseErrorKey: response] as [String : Any]
             let customError = NSError(domain: HttpResponseSerializationErrorDomain, code: NSURLErrorBadServerResponse, userInfo: userInfo)
             throw customError;
         }

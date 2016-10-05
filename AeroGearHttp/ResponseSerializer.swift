@@ -32,12 +32,12 @@ public protocol ResponseSerializer {
 
      :returns: the serialized response
     */
-    func response(data: NSData) -> (AnyObject?)
+    func response(_ data: Data) -> (Any?)
     
     /**
      Validate the response received.
     
      :returns:  either true or false if the response is valid for this particular serializer.
     */
-    func validateResponse(response: NSURLResponse!, data: NSData) throws
+    func validateResponse(_ response: URLResponse!, data: Data) throws
 }
